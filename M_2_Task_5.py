@@ -3,7 +3,6 @@ import csv
 class Student:
    
     students = [] 
-
     def __init__(self, student_id, name, age, grade):
       
         self.student_id = student_id
@@ -12,6 +11,14 @@ class Student:
         self.grade = grade
         Student.students.append(self)
 
+
+
+    def validate_record(student_id, name, age, grade):
+        for student in Student.students:
+            if student.student_id==student_id:
+                return False
+        return True
+    
     def get_age(self):
        
         return self.age
@@ -51,7 +58,9 @@ class Student:
 
     @classmethod
     def add_record(cls, student_id, name, age, grade, filename="students.csv"):
-        
+        if not cls.validate_record(student_id, name, age, grade):
+            print("Record already exists")
+            return
         with open(filename, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([student_id, name, age, grade])
@@ -124,7 +133,7 @@ class Student:
 
     @classmethod
     def search_record(cls, student_id, filename="students.csv"):
-        """Searches for a student record in the CSV file by student_id."""
+       
         try:
             with open(filename, 'r') as file:
                 reader = csv.reader(file)
@@ -141,6 +150,8 @@ class Student:
 
 student1 = Student(1, "Abhishek", 20, "A")
 student2 = Student(2, "Varun", 21, "B")
+
+
 Student.save_to_csv()
 Student.read_from_csv()
 
@@ -159,3 +170,4 @@ Student.read_from_csv()
 
 Student.search_record(1)
 Student.search_record(3)
+Student.add_record(2, "Varun", 21, "B")
