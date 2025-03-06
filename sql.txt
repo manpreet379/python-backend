@@ -1,0 +1,26 @@
+
+CREATE PROCEDURE FetchEmployeeCount()
+BEGIN
+    SELECT COUNT(DISTINCT *) AS Employee_Total FROM employees;
+END;
+
+
+CREATE PROCEDURE RetrieveOrdersByCustomer(IN cust_id INT)
+BEGIN
+    SELECT * FROM orders WHERE customer_id = cust_id;
+END;
+
+
+CREATE PROCEDURE ModifyProductStock(IN prod_id INT, IN qty_sold INT)
+BEGIN
+   
+    UPDATE products 
+    SET stock_quantity = stock_quantity - qty_sold 
+    WHERE id = prod_id;
+
+   
+    IF (SELECT stock_quantity FROM products WHERE id = prod_id) < 5 THEN
+        INSERT INTO low_stock_alerts (product_id, alert_time)
+        VALUES (prod_id, NOW());
+    END IF;
+END;
